@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import NumberFormat from 'react-number-format';
+import {Button} from 'react-bootstrap';
 
 class CartSummary extends Component {
     constructor(props) {
@@ -27,6 +28,8 @@ class CartSummary extends Component {
                 총 {this.props.numberOfSelectedItems}개 제품 선택 됨
                 <br /><br />
                 합계: <NumberFormat value={this.props.totalPrice} displayType={'text'} thousandSeparator={true} prefix={'₩'} />
+                <br /><br />
+                <Button variant="primary">저장</Button>
             </div>
         );
     }
