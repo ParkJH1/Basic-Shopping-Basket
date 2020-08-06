@@ -39,6 +39,46 @@ const createStore = (force=false) => {
     };
 };
 
+const createReceipt = (force=false) => {
+    let sequelize = new Sequelize({
+        dialect: 'sqlite',
+        storage: 'database.sqlite',
+    });
+
+    sequelize.authenticate().then(() => {
+        console.log('Connection to the database has been established successfully');
+    }).catch((err) => {
+        console.error(`Unable to connect to the database: ${err}`);
+    });
+
+    const Model = Sequelize.Model;
+
+    class Receipts extends Model {}
+
+    Receipts.init({
+        id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
+        name: Sequelize.TEXT,
+        price: Sequelize.INTEGER,
+        amount: Sequelize.INTEGER,
+    },
+    {
+        sequelize,
+        modelName: 'Receipts',
+    });
+
+    sequelize.sync({force: force});
+
+    return {
+        Receipts,
+        sequelize,
+    };
+};
+
 module.exports = {
     createStore,
+    createReceipt,
 };

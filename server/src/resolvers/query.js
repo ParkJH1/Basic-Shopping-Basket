@@ -11,4 +11,16 @@ module.exports.Query = {
         }
         return ret;
     },
+    getReceipts: async (parent, args, context) => {
+        const receipts = await context.dataSources.receiptAPI.getAllReceipts();
+        const ret = [];
+        for(let i = 0; i < receipts.length; i++){
+            ret.push({
+                name: receipts[i].name,
+                price: receipts[i].price,
+                amount: receipts[i].amount,
+            });
+        }
+        return ret;
+    },
 };
