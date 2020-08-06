@@ -9,41 +9,58 @@ class ShoppingBasket extends Component {
         super(props);
 
         this.state = {
-            amountOfItems: [],
-            sumOfAmounts: 0,
-            totalPrice: 0,
+            receipt: [],
+            numberOfSelectedItems: 0,
+            totalPrice: 0
         };
     }
 
-    addItem = (price, amount, idx) => {
-        const amountOfItems = [...this.state.amountOfItems]
-        let sumOfAmounts = this.state.sumOfAmounts
+    addItem = (item, amount, idx) => {
+        const receipt = [...this.state.receipt]
+        let numberOfSelectedItems = this.state.numberOfSelectedItems
         let totalPrice = this.state.totalPrice
-        if(isNaN(parseInt(amountOfItems[idx]))) amountOfItems[idx] = 0
-        amountOfItems[idx] += amount
-        sumOfAmounts += amount
-        totalPrice += amount * price
+        if(receipt[idx] === undefined) {
+            receipt[idx] = {
+                name: '',
+                price: 0,
+                amount: 0
+            }
+        }
+        receipt[idx].name = item.name
+        receipt[idx].price = item.price
+        receipt[idx].amount += amount
+        numberOfSelectedItems += amount
+        totalPrice += amount * item.price
         this.setState({
-            amountOfItems: amountOfItems,
-            sumOfAmounts: sumOfAmounts,
-            totalPrice: totalPrice,
+            receipt: receipt,
+            numberOfSelectedItems: numberOfSelectedItems,
+            totalPrice: totalPrice
         });
     }
 
-    removeItem = (price, amount, idx) => {
-        const amountOfItems = [...this.state.amountOfItems]
-        let sumOfAmounts = this.state.sumOfAmounts
+    removeItem = (item, amount, idx) => {
+        const receipt = [...this.state.receipt]
+        let numberOfSelectedItems = this.state.numberOfSelectedItems
         let totalPrice = this.state.totalPrice
-        if(isNaN(parseInt(amountOfItems[idx]))) amountOfItems[idx] = 0
-        const real_amount = Math.min(amountOfItems[idx], amount)
-        amountOfItems[idx] -= real_amount
-        sumOfAmounts -= real_amount
-        totalPrice -= real_amount * price
+        if(receipt[idx] === undefined) {
+            receipt[idx] = {
+                name: '',
+                price: 0,
+                amount: 0
+            }
+        }
+        const real_amount = Math.min(receipt[idx].amount, amount)
+        receipt[idx].name = item.name
+        receipt[idx].price = item.price
+        receipt[idx].amount -= real_amount
+        if(receipt[idx].amount == 0) receipt.splice(idx, 1)
+        numberOfSelectedItems -= real_amount
+        totalPrice -= real_amount * item.price
         this.setState({
-            amountOfItems: amountOfItems,
-            sumOfAmounts: sumOfAmounts,
-            totalPrice: totalPrice,
-        });
+            receipt: receipt,
+            numberOfSelectedItems: numberOfSelectedItems,
+            totalPrice: totalPrice
+      });
     }
 
     render() {
@@ -63,8 +80,7 @@ class ShoppingBasket extends Component {
                             justifyContent: 'center',
                             alignItems: 'center',
                             textAlign: 'center'}}>
-                            <CartSummary numberOfSelectedItems={this.state.sumOfAmounts}
-                                         totalPrice={this.state.totalPrice}/>
+                            <CartSummary receipt={this.state.receipt} numberOfSelectedItems={this.state.numberOfSelectedItems} totalPrice={this.state.totalPrice}/>
                         </div>
                     </div>
                 </Row>
